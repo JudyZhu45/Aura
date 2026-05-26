@@ -49,7 +49,9 @@ enum OpenAIService {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.timeoutInterval = 60
+        // gpt-image-1 can take 60-90s at peak. Effectively no timeout so the
+        // user just waits instead of seeing "The request timed out."
+        request.timeoutInterval = 300
 
         // Using OpenAI's current flagship image model. `gpt-image-1` is what dall-e-3 became —
         // most sk-proj-… keys don't have dall-e-3 enabled, but do have gpt-image-1.
