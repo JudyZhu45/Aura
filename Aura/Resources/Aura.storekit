@@ -1,0 +1,72 @@
+{
+  "identifier" : "AURA_STOREKIT_CONFIG",
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "AURA_PREMIUM_GROUP",
+      "localizations" : [
+        {
+          "description" : "Aura Premium unlocks unlimited wallpaper generation, custom prompts, and downloads.",
+          "displayName" : "Aura Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "Aura Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "AURA_MONTHLY",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited wallpapers, custom prompts, and downloads.",
+              "displayName" : "Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.aura.subscription.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Aura Premium Monthly",
+          "subscriptionGroupID" : "AURA_PREMIUM_GROUP",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "AURA_YEARLY",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited wallpapers — save 50% vs monthly.",
+              "displayName" : "Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.aura.subscription.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Aura Premium Yearly",
+          "subscriptionGroupID" : "AURA_PREMIUM_GROUP",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

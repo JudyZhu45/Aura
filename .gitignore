@@ -1,0 +1,49 @@
+# ============================================================
+# Xcode build artifacts
+# ============================================================
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+
+# Generated Xcode project — regenerate via `xcodegen generate`
+Aura.xcodeproj/
+
+# ============================================================
+# Secrets — NEVER commit real API keys
+# Use Secrets.example.xcconfig as the template.
+# ============================================================
+Aura/Resources/Secrets.xcconfig
+
+# ============================================================
+# Local-only assets (not part of source — don't push)
+# ============================================================
+# Presentation deck + screenshots (built locally)
+presentation/
+
+# Stray screenshots from local debugging sessions
+launch_screenshot.png
+shortcut_flow_home.png
+after_fix_today.png
+*.tmp.png
+
+# ============================================================
+# macOS / OS junk
+# ============================================================
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Python (icon-concept generator scripts)
+# ============================================================
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# ============================================================
+# Logs and tmp
+# ============================================================
+*.log
+*.tmp

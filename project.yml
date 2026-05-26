@@ -1,0 +1,101 @@
+name: Aura
+options:
+  bundleIdPrefix: com.aura
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  Aura:
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: Aura/Resources/Secrets.xcconfig
+      Release: Aura/Resources/Secrets.xcconfig
+    sources:
+      - path: Aura
+        excludes:
+          - "Resources/Info.plist.fragment.xml"
+          - "Resources/Secrets.xcconfig"
+          - "Resources/Secrets.example.xcconfig"
+    resources:
+      - path: Aura/Resources/Aura.storekit
+    dependencies:
+      - target: AuraWidgets
+    info:
+      path: Aura/Info.plist
+      properties:
+        CFBundleDisplayName: Aura
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Injected at build time from Secrets.xcconfig (Aura/Resources/).
+        OpenAIAPIKey: $(OPENAI_API_KEY)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiredDeviceCapabilities:
+          - arm64
+        NSPhotoLibraryAddUsageDescription: Aura needs permission to save your generated wallpapers to Photos.
+        NSPhotoLibraryUsageDescription: Aura needs access to your photo library to save wallpapers.
+        # Required for `UIApplication.canOpenURL` to return true for these schemes.
+        LSApplicationQueriesSchemes:
+          - shortcuts
+          - photos-redirect
+        # Our own URL scheme so the widget can deep-link back into the app.
+        CFBundleURLTypes:
+          - CFBundleURLSchemes:
+              - aura
+            CFBundleURLName: com.aura.app
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.aura.app
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_EMIT_LOC_STRINGS: true
+        ENABLE_PREVIEWS: YES
+        ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: NO
+        # No AppIcon yet — design pending. Empty string suppresses the
+        # "missing AppIcon" error so build can succeed without an icon.
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        CODE_SIGN_ENTITLEMENTS: Aura/Aura.entitlements
+    scheme:
+      # NOTE: XcodeGen 2.45.4 generates `../../<path>` for this; Xcode then resolves it
+      # relative to the .xcodeproj which lands one level too high. We give it `Aura/Resources/...`
+      # and patch the scheme after `xcodegen generate` — see scripts/fix-storekit-path.sh.
+      storeKitConfiguration: Aura/Resources/Aura.storekit
+      testTargets: []
+
+  AuraWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: AuraWidgets
+      # Re-include SharedStorage so the widget can read the App Group.
+      - path: Aura/Models/SharedStorage.swift
+    info:
+      path: AuraWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Aura Widgets
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.aura.app.widgets
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_EMIT_LOC_STRINGS: true
+        CODE_SIGN_ENTITLEMENTS: AuraWidgets/AuraWidgets.entitlements
+        SKIP_INSTALL: YES

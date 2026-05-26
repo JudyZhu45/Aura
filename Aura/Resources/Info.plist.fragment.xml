@@ -1,0 +1,13 @@
+<!--
+  Add these keys to your target's Info tab (or Info.plist) in Xcode.
+  Xcode 15+ projects default to generated Info.plist — add via:
+    Target → Info → Custom iOS Target Properties → "+"
+-->
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>Aura needs permission to save your generated wallpapers to Photos.</string>
+
+<!--
+  Optional: if you ever READ from the photo library, add this too:
+-->
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Aura needs access to your photo library to save wallpapers.</string>
