@@ -9,7 +9,7 @@ final class UserSubscriptionManager: ObservableObject {
     static let demoUnlocked = true
 
     @Published private(set) var products: [Product] = []
-    @Published private(set) var isPremium: Bool = Self.demoUnlocked
+    @Published private(set) var isPremium: Bool = UserSubscriptionManager.demoUnlocked
     @Published var purchaseInProgress: Bool = false
     @Published var lastError: String?
     /// Becomes `true` after the first `loadProducts()` call completes (success or fail).
