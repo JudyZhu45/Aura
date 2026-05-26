@@ -3,8 +3,13 @@ import StoreKit
 
 @MainActor
 final class UserSubscriptionManager: ObservableObject {
+    // ⚠️ DEMO MODE — flip to `false` to re-enable the paywall + daily-limit gating.
+    // While `true`, every user is treated as Premium: unlimited generations,
+    // custom text prompts unlocked, history downloads unlocked, paywall never appears.
+    static let demoUnlocked = true
+
     @Published private(set) var products: [Product] = []
-    @Published private(set) var isPremium: Bool = false
+    @Published private(set) var isPremium: Bool = Self.demoUnlocked
     @Published var purchaseInProgress: Bool = false
     @Published var lastError: String?
     /// Becomes `true` after the first `loadProducts()` call completes (success or fail).
@@ -64,6 +69,10 @@ final class UserSubscriptionManager: ObservableObject {
     }
 
     func refreshEntitlements() async {
+        if Self.demoUnlocked {
+            isPremium = true
+            return
+        }
         var active = false
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
