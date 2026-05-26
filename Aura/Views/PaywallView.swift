@@ -94,7 +94,14 @@ struct PaywallView: View {
 
     @ViewBuilder
     private var productList: some View {
-        if subscription.products.isEmpty {
+        if !subscription.products.isEmpty {
+            VStack(spacing: 12) {
+                ForEach(subscription.products, id: \.id) { product in
+                    productRow(product)
+                }
+            }
+        } else if !subscription.productsLoadAttempted {
+            // Initial load — show spinner.
             HStack(spacing: 8) {
                 ProgressView().tint(.white)
                 Text("Loading plans…")
@@ -103,11 +110,32 @@ struct PaywallView: View {
             }
             .padding(.vertical, 8)
         } else {
-            VStack(spacing: 12) {
-                ForEach(subscription.products, id: \.id) { product in
-                    productRow(product)
+            // Load finished but returned empty. Most common in dev: launched
+            // via `simctl launch` (CLI), which bypasses the scheme's StoreKit
+            // configuration. On a real device this means no App Store products
+            // exist with these IDs yet.
+            VStack(spacing: 10) {
+                Image(systemName: "wifi.exclamationmark")
+                    .font(.title3)
+                    .foregroundStyle(AuraTheme.accent)
+                Text("Couldn't load plans")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                Text("Launch from Xcode (⌘R) to load the local StoreKit config, or check your connection.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 12)
+                Button("Retry") {
+                    Task { await subscription.loadProducts() }
                 }
+                .font(.caption.bold())
+                .foregroundStyle(.black)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+                .background(AuraTheme.accent, in: Capsule())
             }
+            .padding(.vertical, 12)
         }
     }
 
@@ -152,7 +180,8 @@ struct PaywallView: View {
     }
 
     private var purchaseButton: some View {
-        Button {
+        let isReady = !subscription.products.isEmpty && selectedID != nil
+        return Button {
             guard
                 let id = selectedID,
                 let product = subscription.products.first(where: { $0.id == id })
@@ -167,8 +196,8 @@ struct PaywallView: View {
             }
         }
         .buttonStyle(PrimaryAuroraButtonStyle())
-        .disabled(selectedID == nil || subscription.purchaseInProgress)
-        .opacity(selectedID == nil ? 0.6 : 1)
+        .disabled(!isReady || subscription.purchaseInProgress)
+        .opacity(isReady ? 1 : 0.5)
     }
 
     private func pickDefaultProduct() {

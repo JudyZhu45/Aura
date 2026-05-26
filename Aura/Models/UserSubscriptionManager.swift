@@ -7,6 +7,9 @@ final class UserSubscriptionManager: ObservableObject {
     @Published private(set) var isPremium: Bool = false
     @Published var purchaseInProgress: Bool = false
     @Published var lastError: String?
+    /// Becomes `true` after the first `loadProducts()` call completes (success or fail).
+    /// Used by the paywall to distinguish "still loading" from "loaded but empty".
+    @Published private(set) var productsLoadAttempted: Bool = false
 
     // TODO: replace these with your real StoreKit product IDs from App Store Connect.
     // The same IDs must exist in Resources/Aura.storekit for simulator testing.
@@ -31,6 +34,7 @@ final class UserSubscriptionManager: ObservableObject {
         } catch {
             lastError = "Could not load products: \(error.localizedDescription)"
         }
+        productsLoadAttempted = true
     }
 
     func purchase(_ product: Product) async {
